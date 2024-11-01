@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_apps/api_service/api.dart';
 import 'package:movie_apps/auth/login_page.dart';
+import 'package:toastification/toastification.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -9,6 +12,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final dio = Dio();
+  bool isLoading = false;
   TextEditingController usernameController = TextEditingController();
   TextEditingController fullNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -87,19 +92,56 @@ class _RegisterPageState extends State<RegisterPage> {
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.text,
+              obscureText: true,
             ),
             const SizedBox(
               height: 16,
             ),
-            ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueGrey,
-                    minimumSize: const Size.fromHeight(50)),
-                child: const Text(
-                  "Login",
-                  style: TextStyle(color: Colors.white),
-                )),
+            isLoading
+                ? const CircularProgressIndicator()
+                : ElevatedButton(
+                    onPressed: () {
+                      if (usernameController.text.isEmpty) {
+                        toastification.show(
+                            context: context,
+                            title: const Text("Username tidak boleh kosong!"),
+                            type: ToastificationType.error,
+                            style: ToastificationStyle.fillColored);
+                      } else if (fullNameController.text.isEmpty) {
+                        toastification.show(
+                            context: context,
+                            title: const Text("fullname tidak boleh kosong!"),
+                            type: ToastificationType.error,
+                            style: ToastificationStyle.fillColored);
+                      } else if (emailController.text.isEmpty) {
+                        toastification.show(
+                            context: context,
+                            title: const Text("Email tidak boleh kosong!"),
+                            type: ToastificationType.error,
+                            style: ToastificationStyle.fillColored);
+                      } else if (phoneController.text.isEmpty) {
+                        toastification.show(
+                            context: context,
+                            title: const Text("Phone tidak boleh kosong!"),
+                            type: ToastificationType.error,
+                            style: ToastificationStyle.fillColored);
+                      } else if (passwordController.text.isEmpty) {
+                        toastification.show(
+                            context: context,
+                            title: const Text("Password tidak boleh kosong!"),
+                            type: ToastificationType.error,
+                            style: ToastificationStyle.fillColored);
+                      } else {
+                        registerResponse();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blueGrey,
+                        minimumSize: const Size.fromHeight(50)),
+                    child: const Text(
+                      "Register",
+                      style: TextStyle(color: Colors.white),
+                    )),
             const SizedBox(
               height: 16,
             ),
@@ -118,5 +160,48 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
     )));
+  }
+
+  void registerResponse() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      await Future.delayed(const Duration(seconds: 2));
+      Response response;
+      response = await dio.post(register, data: {
+        "username": usernameController.text,
+        "fullname": fullNameController.text,
+        "email": emailController.text,
+        "phone": phoneController.text,
+        "password": passwordController.text,
+      });
+      if (response.data['status'] == true) {
+        toastification.show(
+            context: context,
+            title: Text(response.data['msg']),
+            type: ToastificationType.success,
+            autoCloseDuration: const Duration(seconds: 3),
+            style: ToastificationStyle.fillColored);
+        Navigator.pushNamed(context, LoginPage.routeName);
+      } else {
+        toastification.show(
+            context: context,
+            title: Text(response.data['msg']),
+            type: ToastificationType.error,
+            style: ToastificationStyle.fillColored);
+      }
+    } catch (e) {
+      print(e);
+      toastification.show(
+          context: context,
+          title: const Text("Terjadi Kesalahan Pada Server"),
+          type: ToastificationType.error,
+          style: ToastificationStyle.fillColored);
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }
