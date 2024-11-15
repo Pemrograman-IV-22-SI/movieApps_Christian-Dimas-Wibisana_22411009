@@ -6,3 +6,6 @@ String login = "$baseUrl/users/login";
 
 //genre
 String getAllGenre = "$baseUrl/genre/read";
+String insertGenre = "$baseUrl/genre/insert";
+String hapusGenre = "$baseUrl/genre/delete/";
+String editGenre = "$baseUrl/genre/edit/";
