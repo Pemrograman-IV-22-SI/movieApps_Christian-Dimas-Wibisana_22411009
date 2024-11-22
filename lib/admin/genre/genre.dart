@@ -18,6 +18,7 @@ class Genre extends StatefulWidget {
 class _GenreState extends State<Genre> {
   final dio = Dio();
   bool isLoading = false;
+  bool isLoadingDelete = false;
   var dataGenre = [];
   @override
   void initState() {
@@ -78,16 +79,18 @@ class _GenreState extends State<Genre> {
                             size: 20,
                           )),
                       IconButton(
-                          onPressed: () {
+                          onPressed: () async {
                             QuickAlert.show(
                                 context: context,
-                                title: 'Hapus Genre ',
                                 type: QuickAlertType.confirm,
+                                title: 'Hapus Genre',
                                 text:
-                                    'Yakin Ingin Hapus Genre? ${genre['name']}?',
-                                confirmBtnText: 'Yes',
-                                cancelBtnText: 'No',
-                                confirmBtnColor: Colors.green,
+                                    'Yakin ingin menghapus genre ${genre['name']} ?',
+                                confirmBtnText: isLoadingDelete
+                                    ? 'Mengapus Data.....'
+                                    : 'Ya',
+                                cancelBtnText: 'Tidak',
+                                confirmBtnColor: Colors.red,
                                 onConfirmBtnTap: () {
                                   deleteGenreResponse(genre['id_genre']);
                                 });
@@ -134,31 +137,31 @@ class _GenreState extends State<Genre> {
     }
   }
 
-  void deleteGenreResponse(int idGenre) async {
+  void deleteGenreResponse(int id) async {
     try {
       setState(() {
         isLoading = true;
       });
-
       Response response;
-      response = await dio.delete(hapusGenre + idGenre.toString());
+      response = await dio.delete(hapusGenre + id.toString());
       if (response.data['status'] == true) {
         toastification.show(
           context: context,
           title: Text(response.data['message']),
           type: ToastificationType.success,
-          autoCloseDuration: Duration(seconds: 3),
+          autoCloseDuration: const Duration(seconds: 3),
           style: ToastificationStyle.fillColored,
         );
         Navigator.pushNamed(context, Genre.routeName);
       }
     } catch (e) {
       toastification.show(
-          context: context,
-          title: const Text('Terjadi Kesalahan Pada Server'),
-          type: ToastificationType.error,
-          autoCloseDuration: Duration(seconds: 3),
-          style: ToastificationStyle.fillColored);
+        context: context,
+        title: const Text('Terjadi kesalahan pada server'),
+        type: ToastificationType.error,
+        autoCloseDuration: const Duration(seconds: 3),
+        style: ToastificationStyle.fillColored,
+      );
     } finally {
       setState(() {
         isLoading = false;
