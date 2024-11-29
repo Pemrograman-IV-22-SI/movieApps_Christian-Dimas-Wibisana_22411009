@@ -58,9 +58,10 @@ class _InputGenreState extends State<InputGenre> {
                 TextField(
                   controller: namaGenreController,
                   decoration: const InputDecoration(
-                    labelText: "Nama Genre",
-                    border: OutlineInputBorder(),
-                  ),
+                      labelText: "Nama Genre",
+                      border: OutlineInputBorder(),
+                      labelStyle: TextStyle(color: Colors.white)),
+                  style: TextStyle(color: Colors.white),
                   keyboardType: TextInputType.text,
                 ),
                 const SizedBox(
