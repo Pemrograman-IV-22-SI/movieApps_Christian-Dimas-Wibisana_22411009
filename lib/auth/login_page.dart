@@ -144,9 +144,9 @@ class _LoginPageState extends State<LoginPage> {
         var users = response.data['data'];
 
         if (users['role'] == 1) {
-          Navigator.pushNamed(context, HomeAdmin.routeName);
+          Navigator.pushNamed(context, HomeAdmin.routeName, arguments: users);
         } else if (users['role'] == 2) {
-          Navigator.pushNamed(context, HomeUsers.routeName);
+          Navigator.pushNamed(context, HomeUsers.routeName, arguments: users);
         } else {
           toastification.show(
               context: context,

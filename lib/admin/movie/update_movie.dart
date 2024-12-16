@@ -17,8 +17,8 @@ class UpdateMoviePage extends StatefulWidget {
 
 class _UpdateMoviePageState extends State<UpdateMoviePage> {
   final dio = Dio();
-  bool isLoading = false;
 
+  bool isLoading = false;
   int? id_genre;
   String? genre;
 
@@ -26,6 +26,7 @@ class _UpdateMoviePageState extends State<UpdateMoviePage> {
   TextEditingController priceController = TextEditingController();
   TextEditingController ratingController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+
   GenreModel? _selectedGenre;
 
   Future<List<GenreModel>> getData() async {
@@ -61,8 +62,6 @@ class _UpdateMoviePageState extends State<UpdateMoviePage> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Map;
-
-    print(args);
 
     titleController.text = args['title'];
     priceController.text = args['price'].toString();

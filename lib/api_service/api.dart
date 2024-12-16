@@ -17,3 +17,7 @@ String editGenre = "$baseUrl/genre/edit/";
 String getAllMovie = "$baseUrl/movie/get-all/";
 String hapusMovie = "$baseUrl/movie/delete/";
 String inputMovie = "$baseUrl/movie/insert";
+
+//transaction
+String insertTransaksi = "$baseUrl/transaction/insert";
+String getTransaksi = "$baseUrl/transaction/get-all";
